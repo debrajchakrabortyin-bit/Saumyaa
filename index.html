@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Saumya's NEET Journey</title>
+<style>
+:root{--bg:#07152f;--card:#0d2145;--card2:#102952;--line:#1e3d6b;--text:#eef5ff;--muted:#9eb2d1;--blue:#55b8ff;--heart:#ff6b9d;--good:#55d6a0}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#06122b,#0a1d3e);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:24px 18px 12px;max-width:1100px;margin:auto}h1{margin:0;font-size:28px}.sub{color:var(--muted);margin-top:6px}
+nav{position:sticky;top:0;z-index:5;background:#07152fee;backdrop-filter:blur(10px);display:flex;gap:7px;overflow:auto;padding:10px calc((100% - 1100px)/2 + 12px);border-bottom:1px solid var(--line)}
+nav button,.btn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 13px;border-radius:12px;cursor:pointer}nav button.active,.btn.primary{background:#16457d;border-color:#2b73b9}
+main{max-width:1100px;margin:0 auto;padding:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:linear-gradient(145deg,var(--card),#0b1d3b);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 30px #0003}.heart{color:var(--heart)}.big{font-size:30px;font-weight:800}.muted{color:var(--muted)}.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.bar{height:9px;background:#132d52;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#2b8cff,#68d8ff);border-radius:99px}.subject{margin:12px 0}.subject b{display:flex;justify-content:space-between}input,textarea,select{width:100%;padding:11px;border-radius:11px;border:1px solid var(--line);background:#071a36;color:var(--text);margin:6px 0 10px}textarea{min-height:100px;resize:vertical}.hidden{display:none}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:#14335f;color:#b9dfff;font-size:12px;margin:2px}.heartline{font-size:16px;line-height:1.6}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day{min-height:70px;background:#0b2042;border:1px solid var(--line);border-radius:10px;padding:7px;cursor:pointer}.day strong{font-size:12px}.day .dot{font-size:11px;color:#ff8db2;display:block;margin-top:7px}.quizopt{display:block;text-align:left;width:100%;margin:8px 0}.toast{position:fixed;right:15px;bottom:15px;background:#14345e;padding:12px 16px;border:1px solid var(--line);border-radius:12px;display:none}
+@media(max-width:600px){h1{font-size:23px}main{padding:12px}.day{min-height:62px;padding:5px;font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row"><div><h1>Saumya's NEET Journey <span class="heart">♥</span></h1><div class="sub">Study smart. Keep going. — Debraj is always with you.</div></div><div class="pill" id="today"></div></div>
+</header>
+<nav id="nav">
+<button data-tab="home" class="active">Home</button><button data-tab="daily">Daily Study</button><button data-tab="update">Daily Update</button><button data-tab="calendar">Tests</button><button data-tab="analysis">Analysis</button><button data-tab="quiz">Quick Revision</button><button data-tab="motivation">Motivation ♥</button>
+</nav>
+<main>
+<section id="home" class="tab">
+<div class="grid">
+<div class="card"><div class="muted">Today's study</div><div class="big" id="homeTotal">0h 0m</div><div class="muted">Self-entered by Saumya</div></div>
+<div class="card"><div class="muted">Today's goal</div><div class="big" id="goalPct">0%</div><div class="bar"><i id="goalBar" style="width:0%"></i></div></div>
+<div class="card"><div class="muted">Tests scheduled</div><div class="big" id="testCount">0</div><div class="muted">in your calendar</div></div>
+</div>
+<div class="card" style="margin-top:14px"><h2>Today's motivation <span class="heart">♥</span></h2><p id="homeMotivation" class="heartline"></p></div>
+</section>
+
+<section id="daily" class="tab hidden">
+<div class="grid">
+<div class="card"><h2>Today's Study Goal 🎯</h2><textarea id="goal" placeholder="Write what you want to finish today..."></textarea><button class="btn primary" onclick="saveGoal()">Save goal</button></div>
+<div class="card"><h2>Study Time — Today</h2>
+<p class="muted" id="dailyDate"></p>
+<label>Biology — how many hours are you going to study my love?</label>
+<input id="bio" type="number" min="0" step=".25" placeholder="e.g. 4">
+<label>Chemistry — how many hours are you going to study my love?</label>
+<input id="chem" type="number" min="0" step=".25" placeholder="e.g. 2.5">
+<label>Physics — chupchaap aur padhai kar Physics mai bhondu ❤️</label>
+<input id="phy" type="number" min="0" step=".25" placeholder="e.g. 3">
+<button class="btn primary" onclick="saveStudy()">Save study time</button>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Daily Progress — choose your actual hours</h3>
+<p class="muted">Tap the hour buttons below as you complete your study. Your progress will update live ❤️</p>
+<div id="progressButtons"></div>
+<div class="card" style="margin-top:12px;background:#091b38">
+<b>Today's tracked progress</b>
+<div id="trackedProgress" class="heartline" style="margin-top:10px"></div>
+</div>
+</div>
+<div class="card"><h2>Progress update ❤️</h2><textarea id="progress" placeholder="Update this anytime during the day..."></textarea><button class="btn primary" onclick="saveProgress()">Save update</button></div>
+</div>
+<div class="card" style="margin-top:14px"><h2>Today</h2><div class="grid"><div><span class="muted">Biology</span><div class="big" id="sBio">0h</div></div><div><span class="muted">Physics</span><div class="big" id="sPhy">0h</div></div><div><span class="muted">Chemistry</span><div class="big" id="sChem">0h</div></div></div><p id="progressSaved" class="heartline"></p></div>
+</section>
+
+<section id="update" class="tab hidden">
+<div class="card">
+<h2>Daily Update ❤️</h2>
+<p class="muted" id="updateDate"></p>
+<p>End of the day pe batao, my love — aaj kitne hours padhe?</p>
+<div class="grid">
+<div><label>🧬 Biology</label><input id="updBio" type="number" min="0" step=".25" placeholder="Hours studied"></div>
+<div><label>🧪 Chemistry</label><input id="updChem" type="number" min="0" step=".25" placeholder="Hours studied"></div>
+<div><label>⚛️ Physics</label><input id="updPhy" type="number" min="0" step=".25" placeholder="Hours studied"></div>
+</div>
+<label>Overall study hours today</label>
+<input id="updTotal" type="number" min="0" step=".25" placeholder="e.g. 8.5">
+<textarea id="updNote" placeholder="Aaj kya complete kiya? Kaisa gaya?"></textarea>
+<button class="btn primary" onclick="saveDailyUpdate()">Save Today's Update ❤️</button>
+</div>
+<div class="card" style="margin-top:14px">
+<h2>Daily Update History 📅</h2>
+<div id="updateHistory"></div>
+</div>
+</section>
+<section id="calendar" class="tab hidden">
+<div class="card"><div class="row"><h2>Test Calendar 📝</h2><input id="month" type="month" style="width:auto"></div><div class="calendar" id="cal"></div></div>
+<div class="card" style="margin-top:14px"><h2>Add / edit test</h2><input id="testDate" type="date"><input id="testName" placeholder="Test name"><select id="testSubject"><option>Full Syllabus</option><option>Biology</option><option>Physics</option><option>Chemistry</option></select><input id="testTopics" placeholder="Chapter / topics"><button class="btn primary" onclick="saveTest()">Save test</button></div>
+<div class="card" style="margin-top:14px"><h2>Upcoming tests</h2><div id="tests"></div></div>
+</section>
+
+<section id="analysis" class="tab hidden">
+<div class="card"><h2>Test Analysis 📊</h2><p class="muted">Enter a completed test below. The app calculates accuracy automatically.</p>
+<select id="analysisTest"></select><div class="grid"><div><label>Score / 720</label><input id="score" type="number"></div><div><label>Correct</label><input id="correct" type="number"></div><div><label>Wrong</label><input id="wrong" type="number"></div><div><label>Unattempted</label><input id="unattempted" type="number"></div></div>
+<textarea id="mistakes" placeholder="Mistakes / weak chapters / notes"></textarea><button class="btn primary" onclick="saveAnalysis()">Save analysis</button></div>
+<div id="analysisList" style="margin-top:14px"></div>
+</section>
+
+<section id="quiz" class="tab hidden">
+<div class="card"><h2>Quick Revision ⚡</h2><p class="muted">Choose a section, chapter and number of questions.</p>
+<select id="qSubject" onchange="sections()"><option>Biology</option><option>Chemistry</option><option>Physics</option></select>
+<select id="qSection"></select><select id="qChapter"></select>
+<label>Number of Questions</label>
+<input id="qCount" type="number" min="1" max="50" value="5" placeholder="e.g. 10">
+<p class="muted">Questions will be shuffled so repeated attempts try to give different questions.</p>
+<button class="btn primary" onclick="startQuiz()">Start Quick Quiz</button></div>
+<div class="card hidden" id="quizBox" style="margin-top:14px"><div class="muted" id="qProgress"></div><h2 id="qText"></h2><div id="qOptions"></div><button class="btn" onclick="nextQ()">Next</button></div>
+<div class="card hidden" id="quizResult" style="margin-top:14px"><h2>Revision Result ❤️</h2><div class="big" id="qScore"></div><p id="qWeak"></p></div>
+</section>
+
+<section id="motivation" class="tab hidden">
+<div class="card"><h2>Today's message for Saumya ❤️</h2><div class="big" style="font-size:20px;line-height:1.6" id="motivationText"></div><p class="muted">A new message is shown each day.</p></div>
+</section>
+</main><div class="toast" id="toast"></div>
+<script>
+const KEY='saumyaNEET_v1', todayKey=()=>new Date().toISOString().slice(0,10);
+const data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"tests":[],"analyses":[]}');
+const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
+const fmtH=x=>{let h=Math.floor(x),m=Math.round((x-h)*60);return `${h}h ${m}m`};
+const dateLabel=()=>new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+document.getElementById('today').textContent=dateLabel();
+const msgs=[
+"Saumya meri bhonduu ❤️ tu kar legi. Tera Debraj tere saath hai hamesha.",
+"Saumya, NEET tough hai, but tu usse zyada strong hai. Aaj ka target bas honestly complete kar. Tera Debraj is proud of you. 💙",
+"Meri bhonduu, ek difficult chapter tumhari capability decide nahi karta. Mistake se seekh, phir comeback kar. ❤️ — Debraj",
+"Saumya, jo hours tu aaj padh rahi hai woh tere future ki foundation hain. Slow chalega toh bhi chalega, bas rukna mat. 💙",
+"Tu jitni mehnat kar rahi hai na, ek din wahi mehnat tera result banegi. Keep going, Saumya. Tera Debraj tere saath hai. ❤️",
+"Aaj perfect hona zaroori nahi hai. Consistent rehna zaroori hai. Chal bhonduu, ek aur chapter. 🫶 — Debraj"
+];
+const msg=msgs[Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000)%msgs.length];
+function day(){return data.days[todayKey()] ||= {bio:0,phy:0,chem:0,goal:'',progress:''}}
+function render(){
+ let d=day(), total=+d.bio+ +d.phy+ +d.chem;
+ homeTotal.textContent=fmtH(total); sBio.textContent=d.bio+'h';sPhy.textContent=d.phy+'h';sChem.textContent=d.chem+'h';
+ goal.value=d.goal;progress.value=d.progress; progressSaved.textContent=d.progress?'Latest update: '+d.progress:'';
+ let target=8, pct=Math.min(100,Math.round(total/target*100));goalPct.textContent=pct+'%';goalBar.style.width=pct+'%';
+ bio.value=d.bio||''; phy.value=d.phy||''; chem.value=d.chem||'';
+ homeMotivation.textContent=msg;motivationText.textContent=msg;testCount.textContent=data.tests.length;
+ renderTests();renderAnalyses();renderCal();renderProgressButtons();renderDailyUpdate();
+}
+function toast(t){toastEl=document.getElementById('toast');toastEl.textContent=t;toastEl.style.display='block';setTimeout(()=>toastEl.style.display='none',1800)}
+function saveGoal(){day().goal=goal.value;save();render();toast('Goal saved ❤️')}
+function saveProgress(){day().progress=progress.value;save();render();toast('Progress updated ❤️')}
+function saveStudy(){let d=day();d.bio=+bio.value||0;d.phy=+phy.value||0;d.chem=+chem.value||0;d.tracked={bio:d.bio,chem:d.chem,phy:d.phy};save();render();toast('Study time saved ❤️')}
+function hourButtons(subject,label){
+  let d=day(), value=(d.tracked&&d.tracked[subject]!==undefined)?d.tracked[subject]:+d[subject]||0;
+  let vals=[0,1,2,3,4,5,6,7,8,10];
+  return `<div style="margin:12px 0"><b>${label}</b><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:7px">
+  ${vals.map(v=>`<button class="btn ${Math.abs(value-v)<.001?'primary':''}" onclick="setTracked('${subject}',${v})">${v}h</button>`).join('')}
+  <button class="btn ${value>10?'primary':''}" onclick="setTrackedPrompt('${subject}')">10h+</button>
+  </div></div>`;
+}
+function setTracked(subject,v){day().tracked ||= {};day().tracked[subject]=v;day()[subject]=v;save();render();toast('Progress updated ❤️')}
+function setTrackedPrompt(subject){let v=prompt('Enter actual hours for this subject today:');if(v!==null&&!isNaN(v)&&+v>=0){setTracked(subject,+v)}}
+function renderProgressButtons(){
+ let d=day(); progressButtons.innerHTML=hourButtons('bio','🧬 Biology')+hourButtons('chem','🧪 Chemistry')+hourButtons('phy','⚛️ Physics');
+ let t=(d.tracked?.bio||0)+(d.tracked?.chem||0)+(d.tracked?.phy||0);
+ trackedProgress.innerHTML=`🧬 Biology — <b>${d.tracked?.bio||0}h</b><br>🧪 Chemistry — <b>${d.tracked?.chem||0}h</b><br>⚛️ Physics — <b>${d.tracked?.phy||0}h</b><hr style="border:0;border-top:1px solid var(--line)"><b>Total — ${t}h 🔥</b>`;
+ dailyDate.textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+function saveDailyUpdate(){
+ let d=day();
+ d.dailyUpdate={
+   bio:+updBio.value||0, chem:+updChem.value||0, phy:+updPhy.value||0,
+   total:+updTotal.value||((+updBio.value||0)+(+updChem.value||0)+(+updPhy.value||0)),
+   note:updNote.value, savedAt:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})
+ };
+ save(); render(); toast('Daily update saved ❤️');
+}
+function renderDailyUpdate(){
+ let d=day();
+ updateDate.textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ let u=d.dailyUpdate||{};
+ updBio.value=u.bio??''; updChem.value=u.chem??''; updPhy.value=u.phy??''; updTotal.value=u.total??''; updNote.value=u.note??'';
+ let entries=Object.entries(data.days).filter(([k,v])=>v.dailyUpdate).sort((a,b)=>b[0].localeCompare(a[0]));
+ updateHistory.innerHTML=entries.map(([date,v])=>`<div class="card" style="margin:8px 0">
+ <b>${date}</b> <span class="pill">Total ${v.dailyUpdate.total}h</span>
+ <div class="muted">🧬 ${v.dailyUpdate.bio}h · 🧪 ${v.dailyUpdate.chem}h · ⚛️ ${v.dailyUpdate.phy}h</div>
+ ${v.dailyUpdate.note?`<p>${v.dailyUpdate.note}</p>`:''}
+ </div>`).join('')||'<p class="muted">No daily updates yet.</p>';
+}
+function saveTest(){let t={id:Date.now(),date:testDate.value,name:testName.value||'NEET Test',subject:testSubject.value,topics:testTopics.value||''};if(!t.date)return;data.tests.push(t);save();render();toast('Test added 📝')}
+function renderTests(){tests.innerHTML=data.tests.sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="card" style="margin:8px 0"><b>${t.date}</b> — ${t.name}<div class="muted">${t.subject} · ${t.topics}</div></div>`).join('')||'<p class="muted">No tests added yet.</p>';analysisTest.innerHTML=data.tests.map(t=>`<option value="${t.id}">${t.date} — ${t.name}</option>`).join('')}
+function saveAnalysis(){let a={testId:+analysisTest.value,score:+score.value||0,correct:+correct.value||0,wrong:+wrong.value||0,unattempted:+unattempted.value||0,mistakes:mistakes.value};data.analyses.push(a);save();render();toast('Analysis saved 📊')}
+function renderAnalyses(){analysisList.innerHTML=data.analyses.slice().reverse().map(a=>{let t=data.tests.find(x=>x.id===a.testId),acc=a.correct/(a.correct+a.wrong||1)*100;return `<div class="card"><h3>${t?.name||'Test'} — ${a.score}/720</h3><p>Accuracy: ${acc.toFixed(1)}% · ✅ ${a.correct} · ❌ ${a.wrong} · ⭕ ${a.unattempted}</p><p>${a.mistakes||''}</p></div>`}).join('')}
+function renderCal(){let val=month.value||new Date().toISOString().slice(0,7);month.value=val;let [y,m]=val.split('-').map(Number),first=new Date(y,m-1,1).getDay(),days=new Date(y,m,0).getDate();cal.innerHTML='';['S','M','T','W','T','F','S'].forEach(x=>{let e=document.createElement('div');e.className='muted';e.textContent=x;cal.appendChild(e)});for(let i=0;i<first;i++)cal.appendChild(document.createElement('div'));for(let d=1;d<=days;d++){let e=document.createElement('div');e.className='day';let ds=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;let ts=data.tests.filter(t=>t.date===ds);e.innerHTML=`<strong>${d}</strong>${ts.map(t=>`<span class="dot">♥ ${t.name}</span>`).join('')}`;e.onclick=()=>{testDate.value=ds;document.getElementById('testName').focus()};cal.appendChild(e)}}
+month.onchange=renderCal;
+const syllabus={
+Biology:{Botany:['Cell: The Unit of Life','Plant Physiology','Plant Reproduction','Ecology and Environment'],Zoology:['Human Physiology','Human Reproduction','Animal Kingdom','Human Health and Disease'],Mixed:['Mixed Biology']},
+Chemistry:{'Physical Chemistry':['Some Basic Concepts of Chemistry','Thermodynamics','Equilibrium','Electrochemistry'], 'Organic Chemistry':['Some Basic Principles of Organic Chemistry','Hydrocarbons','Alcohols, Phenols and Ethers','Amines'], 'Inorganic Chemistry':['Classification of Elements and Periodicity','Chemical Bonding','p-Block Elements','d- and f-Block Elements'],Mixed:['Mixed Chemistry']},
+Physics:{Physics:['Units and Measurements','Kinematics','Laws of Motion','Work, Energy and Power','Current Electricity','Electrostatics','Optics','Modern Physics'],Mixed:['Mixed Physics']}
+};
+function sections(){let s=qSubject.value; qSection.innerHTML=Object.keys(syllabus[s]).map(x=>`<option>${x}</option>`).join(''); chapters()}
+function chapters(){let s=qSubject.value,sec=qSection.value;qChapter.innerHTML=syllabus[s][sec].map(x=>`<option>${x}</option>`).join('')}
+qSection.onchange=chapters;
+let quizState={items:[],i:0,score:0};
+const extraBank=[
+['Biology','Botany','Cell: The Unit of Life','The plasma membrane is primarily composed of:',['Lipids and proteins','Cellulose only','DNA and RNA','Starch'],0],
+['Biology','Zoology','Human Physiology','The oxygen-carrying pigment in human blood is:',['Insulin','Haemoglobin','Keratin','Melanin'],1],
+['Chemistry','Physical Chemistry','Equilibrium','At equilibrium, the rates of forward and reverse reactions are:',['Both zero','Equal','Always different','Infinite'],1],
+['Chemistry','Organic Chemistry','Hydrocarbons','Benzene most commonly undergoes:',['Electrophilic substitution','Nucleophilic addition','Hydrolysis','Combustion only'],0],
+['Chemistry','Inorganic Chemistry','Classification of Elements and Periodicity','Across a period, atomic radius generally:',['Increases','Decreases','Stays constant','Becomes zero'],1],
+['Physics','Physics','Kinematics','The area under a velocity–time graph gives:',['Acceleration','Displacement','Force','Power'],1],
+['Physics','Physics','Laws of Motion','Newton’s second law is represented by:',['F=ma','V=IR','P=VI','Q=mcΔT'],0],
+['Physics','Physics','Electrostatics','The SI unit of electric charge is:',['Volt','Ohm','Coulomb','Tesla'],2]
+];
+const bank=[
+['Biology','Botany','Cell: The Unit of Life','The organelle mainly responsible for ATP production in aerobic respiration is:',['Ribosome','Mitochondrion','Golgi apparatus','Lysosome'],1],
+['Biology','Zoology','Human Physiology','Which chamber of the human heart pumps oxygenated blood into the systemic circulation?',['Right atrium','Right ventricle','Left atrium','Left ventricle'],3],
+['Chemistry','Physical Chemistry','Thermodynamics','For an exothermic reaction at constant pressure, ΔH is:',['Positive','Negative','Zero always','Undefined'],1],
+['Chemistry','Organic Chemistry','Hydrocarbons','The characteristic reaction of alkenes is commonly:',['Addition','Neutralisation','Precipitation','Displacement of metals'],0],
+['Chemistry','Inorganic Chemistry','Chemical Bonding','Which bond results from sharing electron pairs between atoms?',['Ionic','Covalent','Metallic','Hydrogen only'],1],
+['Physics','Physics','Kinematics','The slope of a velocity–time graph represents:',['Displacement','Acceleration','Momentum','Force'],1],
+['Physics','Physics','Current Electricity','Ohm’s law relates potential difference to current through:',['V=IR','P=VI²','Q=CV²','F=qE²'],0],
+['Biology','Zoology','Human Reproduction','The site of fertilisation in humans is usually the:',['Uterus','Cervix','Ampullary-isthmic region of oviduct','Vagina'],2]
+];
+bank.push(...extraBank);
+function startQuiz(){
+ let count=Math.max(1,Math.min(50,parseInt(qCount.value)||5));
+ let arr=bank.filter(q=>q[0]===qSubject.value && (q[1]===qSection.value||q[1]==='Physics'||q[1]==='Mixed') && (q[2]===qChapter.value||q[3]==='Mixed'));
+ if(!arr.length) arr=bank.filter(q=>q[0]===qSubject.value);
+ // Shuffle every attempt so the order changes and different questions are preferred.
+ arr=arr.slice().sort(()=>Math.random()-0.5);
+ let pool=[...arr];
+ // If the requested count exceeds the available question bank, reuse only as a last resort.
+ let items=[];
+ while(items.length<count){
+   if(pool.length===0) pool=arr.slice().sort(()=>Math.random()-0.5);
+   items.push(pool.shift());
+ }
+ quizState={items,i:0,score:0};quizResult.classList.add('hidden');quizBox.classList.remove('hidden');showQ()
+}
+function showQ(){let q=quizState.items[quizState.i];if(!q){finishQuiz();return}qProgress.textContent=`Question ${quizState.i+1} of ${quizState.items.length}`;qText.textContent=q[3];qOptions.innerHTML=q[4].map((o,i)=>`<button class="btn quizopt" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+function answer(i){let q=quizState.items[quizState.i];if(i===q[5])quizState.score++;[...qOptions.children].forEach((b,j)=>{b.disabled=true;b.style.opacity=j===q[5]?'1':'.55'});toast(i===q[5]?'Correct ❤️':'Revise this one 💙')}
+function nextQ(){quizState.i++;showQ()}
+function finishQuiz(){quizBox.classList.add('hidden');quizResult.classList.remove('hidden');qScore.textContent=`${quizState.score} / ${quizState.items.length}`;qWeak.textContent=quizState.score<quizState.items.length*.7?'This topic needs another quick revision ❤️':'Nice work! Keep the momentum going 💙'}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.tab==='quiz')sections()});
+month.value=new Date().toISOString().slice(0,7);testDate.value=todayKey();sections();render();
+</script>
+</body></html>
